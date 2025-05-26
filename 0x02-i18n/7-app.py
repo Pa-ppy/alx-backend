@@ -4,11 +4,13 @@ from flask import Flask, render_template, request, g
 from flask_babel import Babel, _, timezoneselector
 import pytz
 
+
 class Config:
     """App config with language and timezone settings."""
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
+
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -19,7 +21,10 @@ users = {
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+
 babel = Babel(app)
+
 
 def get_user():
     """Get user based on login_as parameter."""
@@ -29,22 +34,26 @@ def get_user():
     except (TypeError, ValueError):
         return None
 
+
 @app.before_request
 def before_request():
     """Run before each request to set global user."""
     g.user = get_user()
+
 
 @babel.localeselector
 def get_locale():
     """Determine best match locale."""
     locale = request.args.get('locale')
     if locale in app.config['LANGUAGES']:
+
         return locale
     if g.user:
         user_locale = g.user.get('locale')
         if user_locale in app.config['LANGUAGES']:
             return user_locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+
 
 @timezoneselector
 def get_timezone():
@@ -60,10 +69,12 @@ def get_timezone():
         pass
     return app.config['BABEL_DEFAULT_TIMEZONE']
 
+
 @app.route('/')
 def index():
     """Display localized greeting."""
     return render_template('7-index.html')
+
 
 if __name__ == '__main__':
     app.run()

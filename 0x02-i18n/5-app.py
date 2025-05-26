@@ -3,11 +3,13 @@
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
 
+
 class Config:
     """App config with languages and defaults."""
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
+
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -20,6 +22,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app)
 
+
 def get_user():
     """Retrieve user from mock database."""
     try:
@@ -28,10 +31,12 @@ def get_user():
     except (TypeError, ValueError):
         return None
 
+
 @app.before_request
 def before_request():
     """Set g.user before handling requests."""
     g.user = get_user()
+
 
 @babel.localeselector
 def get_locale():
@@ -41,10 +46,12 @@ def get_locale():
         return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
+
 @app.route('/')
 def index():
     """Render template with optional user greeting."""
     return render_template('5-index.html')
+
 
 if __name__ == '__main__':
     app.run()
