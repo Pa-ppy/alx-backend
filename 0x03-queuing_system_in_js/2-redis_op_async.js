@@ -13,11 +13,11 @@ client.on('error', (err) => {
 
 const getAsync = promisify(client.get).bind(client);
 
-function setNewSchool(schoolName, value) {
+function setNewSchool (schoolName, value) {
   client.set(schoolName, value, redis.print);
 }
 
-async function displaySchoolValue(schoolName) {
+async function displaySchoolValue (schoolName) {
   try {
     const value = await getAsync(schoolName);
     console.log(value);
