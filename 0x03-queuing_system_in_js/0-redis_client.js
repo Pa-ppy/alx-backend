@@ -1,4 +1,7 @@
 import redis from 'redis';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 const client = redis.createClient();
 
